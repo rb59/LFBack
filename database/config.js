@@ -30,13 +30,13 @@ const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, pr
 }
 
 
-// setAssoc(sequelize);
+setAssoc(sequelize);
 
 
 const dbConnection = async () => {
     try {
         await sequelize.authenticate();
-        // await sequelize.sync();
+        await sequelize.sync(/*{force:true}*/);
         console.log('DB online')
     } catch (error) {
         console.log(error.message);
