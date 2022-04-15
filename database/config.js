@@ -1,6 +1,6 @@
 // cd
 const {Sequelize} = require('sequelize');
-// const {setAssoc} = require('./relations');
+const {setAssoc} = require('./relations');
 
 const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
     host: process.env.MYSQL_HOST,
@@ -13,16 +13,21 @@ const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, pr
       idle: 1000
     }
   });
-//   const modelDefiners = [
-//       require('../models/UserModel'),
-//       require('../models/ProfileModel'),
-      
-//     ];
+  const modelDefiners = [
+      require('../models/ChatRoomModel'),
+      require('../models/MessageModel'),
+      require('../models/ProfileModel'),
+      require('../models/ProjectModel'),
+      require('../models/ProjectUpdateModel'),
+      require('../models/RequestModel'),
+      require('../models/RoleModel'),
+      require('../models/UserModel'),
+    ];
     
-//     // We define all models according to their files.
-//     for (const modelDefiner of modelDefiners) {
-//         modelDefiner(sequelize);
-// }
+    // We define all models according to their files.
+    for (const modelDefiner of modelDefiners) {
+        modelDefiner(sequelize);
+}
 
 
 // setAssoc(sequelize);
@@ -30,8 +35,8 @@ const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, pr
 
 const dbConnection = async () => {
     try {
-        // await sequelize.sync();
         await sequelize.authenticate();
+        // await sequelize.sync();
         console.log('DB online')
     } catch (error) {
         console.log(error.message);
