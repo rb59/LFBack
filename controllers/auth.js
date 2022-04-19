@@ -1,5 +1,5 @@
 const { response } = require('express');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const {sequelize} = require('../database/config');
 const {User, Profile, Role} = sequelize.models;
 const { jwtGenerator } = require('../helpers/jwt');
@@ -59,46 +59,51 @@ const createUser = async (req, res = response, next) => {
         }
     })(req,res,next);
 };
-/*
-const loginUser = async (req, res = response) => {
-    const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(400).json({
+const loginUser = async (req, res = response, next) => {
+    passport.authenticate('login', async(err,userInfo,info) => {
+        try {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    ok: false,
+                    msg: err,
+                });
+            }
+            if (info !== undefined) {
+                console.log(info.message);
+                return res.status(400).json({
+                    ok: false,
+                    msg: info.message,
+                });
+            }
+            req.login(userInfo, async err => {
+                const user = await User.findOne({
+                    where: {
+                        email: userInfo.email,
+                    },
+                    include: Profile,
+                });              
+                const name = `${user.Profile.first_name} ${user.Profile.last_name}`;
+                const token = await jwtGenerator(user.UUID, name, user.email);
+                res.json({
+                    ok: true,
+                    uuid: user.UUID,
+                    name,
+                    email: user.email,
+                    token,
+                });
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
                 ok: false,
-                msg: 'No such email registered',
+                msg: 'Internal database error. Please contact an administrator',
             });
         }
-
-        // Match passwords
-        const validPassword = bcrypt.compareSync(password, user.password);
-        if (!validPassword) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'Incorrect password',
-            });
-        }
-
-        // Generate Web Token
-        const token = await jwtGenerator(user.id, user.name);
-
-        res.json({
-            ok: true,
-            uid: user.id,
-            name: user.name,
-            token,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            ok: false,
-            msg: 'Internal database error. Please contact an administrator',
-        });
-    }
+    })(req,res,next);  
 };
-
+/*
 const renewToken = async (req, res = response) => {
     const { uid, name } = req;
     const token = await jwtGenerator(uid, name);
@@ -112,6 +117,6 @@ const renewToken = async (req, res = response) => {
 */
 module.exports = {
     createUser,
-    /*loginUser,
-    renewToken,*/
+    loginUser,
+    // renewToken,
 };

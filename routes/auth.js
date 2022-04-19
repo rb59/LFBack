@@ -9,7 +9,7 @@ const { fieldsValidator } = require('../middlewares/fieldsValidator');
 const {isDate} = require('../helpers/isDate');
 const { jwtValidator } = require('../middlewares/jwtValidator');
 // Controllers
-const { createUser, /*loginUser, renewToken */} = require('../controllers/auth');
+const { createUser, loginUser, /*renewToken */} = require('../controllers/auth');
 
 const router = Router();
 
@@ -29,17 +29,17 @@ router.post(
     createUser
 );
 
-// router.post(
-//     '/login',
-//     [
-//         check('email', 'Email field is required').isEmail(),
-//         check('password', 'Password must be at least 6 chars long').isLength({
-//             min: 6,
-//         }),
-//         fieldsValidator,
-//     ],
-//     loginUser
-// );
+router.post(
+    '/login',
+    [
+        check('email', 'Email field is required').isEmail(),
+        check('password', 'Password must be at least 6 chars long').isLength({
+            min: 6,
+        }),
+        fieldsValidator,
+    ],
+    loginUser
+);
 
 // router.get('/renew', [jwtValidator], renewToken);
 
