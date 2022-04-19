@@ -4,6 +4,7 @@
 .pnp.js
 
 # misc
+/.vscode
 .DS_Store
 .env
 *.sql
