@@ -7,9 +7,9 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const { fieldsValidator } = require('../middlewares/fieldsValidator');
 const {isDate} = require('../helpers/isDate');
-const { jwtValidator } = require('../middlewares/jwtValidator');
 // Controllers
-const { createUser, loginUser, /*renewToken */} = require('../controllers/auth');
+const { createUser, loginUser, renewToken } = require('../controllers/auth');
+const passport = require('passport');
 
 const router = Router();
 
@@ -41,6 +41,6 @@ router.post(
     loginUser
 );
 
-// router.get('/renew', [jwtValidator], renewToken);
+router.get('/renew', passport.authenticate('jwt',{session:false}), renewToken);
 
 module.exports = router;

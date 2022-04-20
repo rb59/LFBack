@@ -103,20 +103,21 @@ const loginUser = async (req, res = response, next) => {
         }
     })(req,res,next);  
 };
-/*
+
 const renewToken = async (req, res = response) => {
-    const { uid, name } = req;
-    const token = await jwtGenerator(uid, name);
+    const { uuid, name, email } = req;
+    const token = await jwtGenerator(uuid, name, email);
     res.json({
         ok: true,
-        token,
-        uid,
+        uuid,
         name,
+        email,
+        token,
     });
 };
-*/
+
 module.exports = {
     createUser,
     loginUser,
-    // renewToken,
+    renewToken,
 };

@@ -93,23 +93,23 @@ passport.use(
 );
 
 const opts = {
-    jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme('JWT'),
+    jwtFromRequest: ExtractJWT.fromHeader('x-token'),
     secretOrKey: process.env.SECRET_JWT_SEED,
+    passReqToCallback: true,
 };
 
 // jwt strategy for authentication
 passport.use(
     'jwt',
-    new JWTstrategy(opts, async (jwt_payload, done) => {
+    new JWTstrategy(opts, async (req, jwt_payload, done) => {
         try {
-            const user = await User.findOne({
-                where: {
-                    UUID: jwt_payload.uuid,
-                },
-            });
+            const user = await User.findByPk(jwt_payload.uuid);
             if (user) {
                 console.log('user found in db in passport');
-                done(null, user);
+                req.uuid = jwt_payload.uuid;
+                req.name = jwt_payload.name;
+                req.email = jwt_payload.email;
+                return done(null, user);
             } else {
                 console.log('user not found in db');
                 done(null, false);
