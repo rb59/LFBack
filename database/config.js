@@ -15,6 +15,7 @@ const sequelize = new Sequelize(process.env.MYSQL_DB, process.env.MYSQL_USER, pr
   });
   const modelDefiners = [
       require('../models/ChatRoomModel'),
+      require('../models/FederatedAuthModel'),
       require('../models/MessageModel'),
       require('../models/ProfileModel'),
       require('../models/ProjectModel'),
@@ -33,7 +34,7 @@ setAssoc(sequelize);
 
 const dbConnection = async () => {
     try {
-        //await sequelize.sync(/*{force:true}*/);   
+        await sequelize.sync(/*{force:true}*/);   
         await sequelize.authenticate();
         console.log('DB online')
     } catch (error) {

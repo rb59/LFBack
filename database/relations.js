@@ -1,6 +1,7 @@
 const setAssoc = (sequelize) => {
     const {
         Chat_room, 
+        Federated_auth,
         Message,
         Profile,
         Project, 
@@ -15,6 +16,9 @@ const setAssoc = (sequelize) => {
 
     User.hasOne(Profile);
     Profile.belongsTo(User);
+    
+    User.hasOne(Federated_auth);
+    Federated_auth.belongsTo(User);
 
     User.hasMany(Project);
     Project.belongsTo(User);
