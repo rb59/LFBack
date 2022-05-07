@@ -8,7 +8,7 @@ const { check } = require('express-validator');
 const { fieldsValidator } = require('../middlewares/fieldsValidator');
 const {isDate} = require('../helpers/isDate');
 // Controllers
-const { createUser, loginUser, renewToken } = require('../controllers/auth');
+const { createUser, loginUser, googleLogin, renewToken } = require('../controllers/auth');
 const passport = require('passport');
 
 const router = Router();
@@ -40,6 +40,9 @@ router.post(
     ],
     loginUser
 );
+
+router.get('/google', passport.authenticate('google'));
+router.get('/oauth2/redirect/google', passport.authenticate('google'), googleLogin);
 
 router.get('/renew', passport.authenticate('jwt',{session:false}), renewToken);
 

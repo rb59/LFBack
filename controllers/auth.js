@@ -104,6 +104,33 @@ const loginUser = async (req, res = response, next) => {
     })(req,res,next);  
 };
 
+const googleLogin = async (req, res = response) => {
+    const { uuid, name, email, created } = req;
+    try {
+        if (created) {
+            await Profile.create({
+                first_name: name.givenName,
+                last_name: name.familyName,
+                UserUUID: uuid,
+            });    
+        }
+        const fullName = `${name.givenName} ${name.familyName}`
+        const token = await jwtGenerator(uuid, fullName, email);
+        res.json({
+            ok: true,
+            uuid,
+            name: fullName,
+            email,
+            token,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Internal database error. Please contact an administrator',
+        });
+    }
+};
 const renewToken = async (req, res = response) => {
     const { uuid, name, email } = req;
     const token = await jwtGenerator(uuid, name, email);
@@ -119,5 +146,6 @@ const renewToken = async (req, res = response) => {
 module.exports = {
     createUser,
     loginUser,
+    googleLogin,
     renewToken,
 };

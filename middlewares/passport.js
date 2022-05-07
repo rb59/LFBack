@@ -128,9 +128,9 @@ passport.use(
             {
                 clientID: process.env.GOOGLE_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                callbackURL: 'http://localhost:4000/oauth2/redirect/google',
+                callbackURL: 'http://localhost:4000/api/auth/oauth2/redirect/google',
                 scope: [ 'profile','email' ],
-                state: true,
+                // state: true,
                 passReqToCallback: true,
                 // session: false,
             },
