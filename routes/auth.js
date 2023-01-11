@@ -42,7 +42,7 @@ router.post(
 );
 
 router.get('/google', passport.authenticate('google'));
-router.get('/oauth2/redirect/google', passport.authenticate('google'), googleLogin);
+router.get('/oauth2/redirect/google', passport.authenticate('google',{ session: false }), googleLogin);
 
 router.get('/renew', passport.authenticate('jwt',{session:false}), renewToken);
 

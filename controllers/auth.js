@@ -108,6 +108,17 @@ const googleLogin = async (req, res = response) => {
     const { uuid, name, email, created } = req;
     try {
         if (created) {
+            const user = await User.findOne({
+                where: {
+                    email,
+                },
+            });
+            const role = await Role.findOne({
+                where: {
+                    type: 'user',
+                },
+            });
+            await user.setRole(role);
             await Profile.create({
                 first_name: name.givenName,
                 last_name: name.familyName,

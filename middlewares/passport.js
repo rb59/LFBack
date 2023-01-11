@@ -136,18 +136,18 @@ passport.use(
             },
             async (req, accessToken, refreshToken, profile, done) => {
             try {
-                const fedAuth = await Federated_auth.findOne({
+                let fedAuth = await Federated_auth.findOne({
                     where: {
                         provider: 'google',
                         key: profile.id
                     }
                 });
 
-                if (!fedAuth) {
-                    const [user,created] = await User.findOrCreate({
+                if (!fedAuth) { 
+                    let [user,created] = await User.findOrCreate({
                         where: {
                             email: profile.emails[0].value,
-                        },
+                        }
                     });
                     const googleAuth = await Federated_auth.create({
                         provider: 'google',
